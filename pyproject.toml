@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "citecheck"
+version = "0.1.0"
+description = "Deterministic RAG citation verifier (stdlib-only CLI + library)."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+authors = [
+  { name = "Wael Zohny", email = "wael@yosr.ai" },
+]
+keywords = ["rag", "citation", "verification", "cli", "agents"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = []
+
+[project.scripts]
+citecheck = "citecheck.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/wzohny/citecheck"
+Repository = "https://github.com/wzohny/citecheck"
+Issues = "https://github.com/wzohny/citecheck/issues"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]

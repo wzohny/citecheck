@@ -1,0 +1,12 @@
+# citecheck
+
+> Deterministic RAG citation verifier for Python 3.11+. Catches empty answers, unknown source IDs, ungrounded quotes, high-specificity uncited claims, and unused sources—stdlib only, no LLM calls.
+
+Use as a library (`from citecheck import verify`) or CLI (`citecheck <input.json> [--strict] [--json]`). Also supports `--stdin`. Exit codes: `0` (pass), `1` (error findings), `2` (runtime/config error). Version: `0.1.0`.
+
+## Documentation
+- [SPEC.md](SPEC.md): Exact v0.1.0 input contract, 5 rules, CLI flags, exit codes, and JSON schema.
+- [AGENTS.md](AGENTS.md): Contributing-agent architecture boundaries and `make check` verification gate.
+- [Makefile](Makefile): Single local gate (`make check`) for lint, tests, examples, and LOC audit.
+- [pyproject.toml](pyproject.toml): PEP 621 package metadata and `citecheck` console entrypoint.
+
