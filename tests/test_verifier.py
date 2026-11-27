@@ -54,6 +54,33 @@ class TestUnknownSource(unittest.TestCase):
         self.assertEqual(unknown, [])
 
 
+class TestMarkdownSpans(unittest.TestCase):
+    def test_markdown_link_label_is_not_a_citation(self) -> None:
+        r = verify(
+            answer="See [docs](https://example.com) for details [S1].",
+            sources=[{"id": "S1", "text": "Details."}],
+        )
+        rules = [f.rule for f in r.findings]
+        self.assertNotIn("cite/unknown-source", rules)
+        self.assertEqual(r.citations_checked, 1)
+
+    def test_fenced_code_is_not_scanned(self) -> None:
+        answer = "Example:\n```python\nprint('[S9]')\n```\nConfirmed [S1]."
+        r = verify(answer=answer, sources=[{"id": "S1", "text": "Confirmed."}])
+        rules = [f.rule for f in r.findings]
+        self.assertNotIn("cite/unknown-source", rules)
+        self.assertEqual(r.citations_checked, 1)
+
+    def test_inline_code_is_not_scanned(self) -> None:
+        r = verify(
+            answer="Use `[S9]` literally; confirmed [S1].",
+            sources=[{"id": "S1", "text": "Confirmed."}],
+        )
+        rules = [f.rule for f in r.findings]
+        self.assertNotIn("cite/unknown-source", rules)
+        self.assertEqual(r.citations_checked, 1)
+
+
 class TestMultiCitations(unittest.TestCase):
     def test_comma_multi(self) -> None:
         r = verify(
