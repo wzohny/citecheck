@@ -24,6 +24,26 @@ _SOURCE_PREFIX_RE = re.compile(r"(?i)^source\s+")
 _SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?])\s+")
 _WHITESPACE_RE = re.compile(r"\s+")
 _OUTER_PUNCT_RE = re.compile(r"^[\W_]+|[\W_]+$", re.UNICODE)
+# Markdown constructs whose bracketed spans are not citation markers.
+_FENCE_RE = re.compile(r"(?ms)^[ \t]*(?:```|~~~)[^\n]*\n.*?^[ \t]*(?:```|~~~)[ \t]*$")
+_INLINE_CODE_RE = re.compile(r"`[^`\n]*`")
+_MD_LINK_RE = re.compile(r"\[[^\]\n]*\]\([^\n)]*\)")
+
+
+def mask_non_prose(text: str) -> str:
+    """Blank fenced/inline code and Markdown links, preserving offsets.
+
+    Bracketed spans inside those constructs are formatting, not citation
+    markers. Blanking (rather than removing) keeps character positions stable
+    so callers can still report the correct sentence index.
+    """
+    masked = list(text)
+    for pattern in (_FENCE_RE, _INLINE_CODE_RE, _MD_LINK_RE):
+        for match in pattern.finditer(text):
+            for pos in range(match.start(), match.end()):
+                if masked[pos] != "\n":
+                    masked[pos] = " "
+    return "".join(masked)
 
 
 def collapse_ws(text: str) -> str:
@@ -58,7 +78,7 @@ def extract_citation_ids(marker_inner: str) -> list[str]:
 def iter_citations(answer: str) -> list[tuple[str, list[str], int, int]]:
     """Return (raw_marker, normalized_ids, start, end) for each ``[...]`` in answer."""
     out: list[tuple[str, list[str], int, int]] = []
-    for m in CITATION_RE.finditer(answer):
+    for m in CITATION_RE.finditer(mask_non_prose(answer)):
         inner = m.group(1)
         ids = extract_citation_ids(inner)
         if ids:
@@ -74,7 +94,7 @@ def split_sentences(answer: str) -> list[tuple[int, str]]:
 
 def has_factual_anchor(sentence: str) -> bool:
     # Strip citations so markers like [S1] don't count as anchors via digits.
-    cleaned = CITATION_RE.sub(" ", sentence)
+    cleaned = CITATION_RE.sub(" ", mask_non_prose(sentence))
     return ANCHOR_RE.search(cleaned) is not None
 
 

@@ -9,6 +9,7 @@ from citecheck.normalize import (
     extract_citation_ids,
     has_factual_anchor,
     iter_citations,
+    mask_non_prose,
     normalize_id,
     normalize_quote,
     QUOTE_CITE_RE,
@@ -92,7 +93,7 @@ def verify(
                     )
                 )
 
-    for m in QUOTE_CITE_RE.finditer(answer):
+    for m in QUOTE_CITE_RE.finditer(mask_non_prose(answer)):
         quote_raw, marker = m.group(1), m.group(2)
         ids = extract_citation_ids(marker[1:-1])
         for cid in ids:
