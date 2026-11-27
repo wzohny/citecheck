@@ -5,8 +5,15 @@
 Use as a library (`from citecheck import verify`) or CLI (`citecheck <input.json> [--strict] [--json]`). Also supports `--stdin`. Exit codes: `0` (pass), `1` (error findings), `2` (runtime/config error). Version: `0.1.0`.
 
 ## Documentation
+- [README.md](README.md): 60-second quickstart, CLI + Python usage, rules and exit codes.
 - [SPEC.md](SPEC.md): Exact v0.1.0 input contract, 5 rules, CLI flags, exit codes, and JSON schema.
 - [AGENTS.md](AGENTS.md): Contributing-agent architecture boundaries and `make check` verification gate.
+- [LICENSE](LICENSE): MIT license.
+
+## Examples
+- [verify_rag_output.py](examples/verify_rag_output.py): Minimal Python library integration example.
+- [sample_payload.json](examples/sample_payload.json): Sample RAG payload for CLI quickstart.
+
+## Optional
 - [Makefile](Makefile): Single local gate (`make check`) for lint, tests, examples, and LOC audit.
 - [pyproject.toml](pyproject.toml): PEP 621 package metadata and `citecheck` console entrypoint.
-

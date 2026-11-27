@@ -1,0 +1,14 @@
+{
+  "answer": "Revenue grew 18% in Q3 [S1], driven by enterprise renewals [S2].",
+  "sources": [
+    {
+      "id": "S1",
+      "text": "Q3 total revenue grew 18% year-over-year to $42.5M.",
+      "title": "Q3 Earnings Release"
+    },
+    {
+      "id": "S2",
+      "text": "Net dollar retention reached 114% across enterprise accounts."
+    }
+  ]
+}

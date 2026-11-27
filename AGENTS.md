@@ -4,19 +4,16 @@
 `citecheck` is a zero-dependency Python 3.11+ CLI and library that deterministically verifies RAG citation markers against retrieved source chunks. Read `SPEC.md` before making changes. Do not expand beyond the v0.1.0 rules or add runtime dependencies.
 
 ## Architecture Boundaries
-Planned modules under `src/citecheck/` (implement only after Step 1 approval):
+Modules under `src/citecheck/`:
 
-```text
-__init__.py   # Exports verify, CheckResult, Finding, __version__
-types.py      # Frozen dataclasses: Source, Finding, CheckResult
-normalize.py  # Text & citation-ID normalization helpers
-verifier.py   # Core deterministic rules engine (5 rules)
-cli.py        # argparse CLI, exit codes 0/1/2, human & --json output
-```
+- `src/citecheck/__init__.py` — exports `verify`, `CheckResult`, `Finding`, `__version__`
+- `src/citecheck/types.py` — frozen dataclasses: `Source`, `Finding`, `CheckResult`
+- `src/citecheck/normalize.py` — text and citation-ID normalization helpers
+- `src/citecheck/verifier.py` — core deterministic rules engine (5 rules)
+- `src/citecheck/cli.py` — argparse CLI, exit codes `0`/`1`/`2`, human and `--json` output
+- `src/citecheck/__main__.py` — `python -m citecheck` entry
 
-- Keep rule logic in the verifier module; CLI handles I/O and formatting only.
-- Total lines across `src/citecheck/*.py` must stay strictly under 600.
-- Python 3.11+ standard library only. Zero external runtime dependencies.
+Keep rule logic in `src/citecheck/verifier.py`; CLI handles I/O and formatting only. Total lines across `src/citecheck/*.py` must stay strictly under 600. Python 3.11+ standard library only.
 
 ## Code Style & Rules
 - Prefer small, flat, readable functions. No premature abstractions or unrequested features.
