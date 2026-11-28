@@ -5,10 +5,23 @@ from __future__ import annotations
 import unittest
 
 from citecheck import verify
-from citecheck.normalize import normalize_id, normalize_quote
+from citecheck.normalize import normalize_id, normalize_quote, split_sentences
 
 
 class TestNormalize(unittest.TestCase):
+    def test_sentence_split_preserves_common_abbreviations(self) -> None:
+        first = "Dr. Patel recorded a change, e.g. 18% vs. last year, i.e. a gain."
+        self.assertEqual(
+            split_sentences(f"{first} Results followed! Questions remained?"),
+            [(1, first), (2, "Results followed!"), (3, "Questions remained?")],
+        )
+
+    def test_sentence_split_does_not_match_abbreviation_suffixes(self) -> None:
+        self.assertEqual(
+            split_sentences("Meet at the backdr. Results followed."),
+            [(1, "Meet at the backdr."), (2, "Results followed.")],
+        )
+
     def test_source_one_to_s1(self) -> None:
         self.assertEqual(normalize_id("Source 1"), "S1")
         self.assertEqual(normalize_id("source 1"), "S1")
@@ -115,6 +128,14 @@ class TestUngroundedQuote(unittest.TestCase):
 
 
 class TestUngroundedClaim(unittest.TestCase):
+    def test_citation_after_abbreviation_covers_the_whole_sentence(self) -> None:
+        r = verify(
+            answer="Revenue grew 18% vs. last year [S1]. Costs later rose 5%.",
+            sources=[{"id": "S1", "text": "Revenue grew 18% vs. last year."}],
+        )
+        claims = [f.sentence for f in r.findings if f.rule == "cite/ungrounded-claim"]
+        self.assertEqual(claims, [2])
+
     def test_warn_without_citation(self) -> None:
         r = verify(
             answer="Revenue grew 18% in Q3.",

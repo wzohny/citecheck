@@ -21,7 +21,11 @@ ANCHOR_RE = re.compile(
     re.VERBOSE,
 )
 _SOURCE_PREFIX_RE = re.compile(r"(?i)^source\s+")
-_SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?])\s+")
+# Keep common mid-sentence abbreviations intact. Group the lookbehinds by width.
+_SENTENCE_SPLIT_RE = re.compile(
+    r"(?<=[.!?])(?<!\b(?:e\.g\.|i\.e\.))(?<!\b(?:dr\.|vs\.))\s+",
+    re.IGNORECASE,
+)
 _WHITESPACE_RE = re.compile(r"\s+")
 _OUTER_PUNCT_RE = re.compile(r"^[\W_]+|[\W_]+$", re.UNICODE)
 
